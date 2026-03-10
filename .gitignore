@@ -10,6 +10,7 @@
 .env
 .vscode
 appsettings.json
+appsettings.Testing.json
 bin
 obj
 

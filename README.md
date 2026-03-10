@@ -1,1 +1,1 @@
-Evita Coffe App
+Evita Coffee App

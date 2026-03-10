@@ -26,36 +26,17 @@ try
     // Modular DI
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddHealthCheckServices(builder.Configuration);
-    // Infrastructure
     builder.Services.AddInfrastructureServices(builder.Configuration);
     builder.Services.AddAuthenticationCore(builder.Configuration);
 
-
-    
-
-
-    // Add services to the container
-
     builder.Services.AddOpenApi();
-    
 
     var app = builder.Build();
 
-   
-
-    // Configure the HTTP request pipeline.
-
-    // A middleware for logging every request 
-    app.UseSerilogRequestLogging(configure =>
-    {
-        configure.MessageTemplate = "HTTP {RequestMethod} {RequestPath} {UserId} responded {StatusCode} in {Elapsed:0.0000} ms";
-
-    });
-
+    app.UseSerilogRequestLogging();
 
     if (app.Environment.IsDevelopment())
     {
-        //app.MapOpenApi();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
@@ -66,7 +47,6 @@ try
 
     app.UseExceptionHandler();
     app.UseMiddleware<CorrelationMiddleware>();
-    app.UseSerilogRequestLogging();
     app.UseCors("AllowedFrontendOrigins");
     app.UseRateLimiter();
     app.UseAuthentication();
@@ -76,20 +56,18 @@ try
     app.MapHealthChecks("/health/ready");
     app.MapControllers();
 
-    // TODO: app.MigrateDatabaseAsync();
-
     app.Run();
 }
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application terminated unexpectedly");
-    return 1;
 }
 finally
 {
     Log.CloseAndFlush();
 }
-return 0;
+
+
 
 
 
